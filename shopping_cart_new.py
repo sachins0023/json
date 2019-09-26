@@ -2,7 +2,7 @@ import os
 import json
 
 class User:
-    def __init__(self, name, username, password):
+    def __init__(self, username, password, name=None):
         self.name = name
         self.username = username
         self.password = password
@@ -28,12 +28,41 @@ class User:
             registry.close()
             return True
 
-    def login(self):
-        pass
+    def login(self, username, password):
+        register = open(os.getcwd()+'/registry.json', 'r')
+        all_credentials_json = register.read()
+        all_credentials_dictionary = json.loads(all_credentials_json)
+        if any(x for x in all_credentials_dictionary["users"] if x['username'] == username and x['password'] == password):
+            return True
+        else:
+            return False
 
+isLogged = False
+while True:
+    print("Welcome to ABC Supermarket")
+    print("Choose your option: ")
+    print("1. Register")
+    print("2. Login")
+    option = int(input("Enter your choice here: "))
 
-user = User(input("name: "), input("username: "), input("password: "))
-if  user.register():
-    print("Registration successful")
-else:
-    print("Registration failed.")
+    if option == 1:
+        name = input("Enter your name: ")
+        username = input("Enter your username: ")
+        password = input("Enter your password: ")
+        user = User(username, password, name)
+        if user.register():
+            print("You have successfully registered in ABC supermarket.")
+        else:
+             print("Registration failed. Register again!")
+        continue
+
+    elif option == 2:
+        username_login = input("Enter your username: ")
+        password_login = input("Enter your password: ")
+        user = User(username_login, password_login)
+        if user.login(username_login, password_login):
+            print("You have successfully logged in")
+            break
+        else:
+            print("Login failed.")
+        continue
