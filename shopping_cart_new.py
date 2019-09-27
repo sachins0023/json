@@ -29,13 +29,18 @@ class User:
             return True
 
     def login(self, username, password):
-        register = open(os.getcwd()+'/registry.json', 'r')
-        all_credentials_json = register.read()
-        all_credentials_dictionary = json.loads(all_credentials_json)
-        if any(x for x in all_credentials_dictionary["users"] if x['username'] == username and x['password'] == password):
-            return True
-        else:
+        try:
+            register = open(os.getcwd()+'/registry.json', 'r')
+        except FileNotFoundError:
+            print("No such user registered. Please register yourself.")
             return False
+        else:
+            all_credentials_json = register.read()
+            all_credentials_dictionary = json.loads(all_credentials_json)
+            if any(x for x in all_credentials_dictionary["users"] if x['username'] == username and x['password'] == password):
+                return True
+            else:
+                return False
 
 isLogged = False
 while True:
@@ -64,5 +69,13 @@ while True:
             print("You have successfully logged in")
             break
         else:
-            print("Login failed.")
+            print("Login failed. Incorrect username or password!")
         continue
+
+os.system('clear')
+print("You are successfully logged in.")
+print("Your Cart options: ")
+print("1. Add to Cart")
+print("2. Display the cart")
+print("3. Update your cart")
+print("4. Remove from cart")
